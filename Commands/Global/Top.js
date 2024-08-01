@@ -44,6 +44,7 @@ module.exports = {
         const collector = msg.createMessageComponentCollector({ filter, time: 30000 });
 
         collector.on('collect', async (i) => {
+            i.deferUpdate();
             if (i.customId === 'first') page = 1;
             if (i.customId === 'previous') page = page > 1 ? page - 1 : page;
             if (i.customId === 'next') page = page < totalData ? page + 1 : page;
@@ -59,7 +60,7 @@ module.exports = {
             ]);
 
             msg.edit({
-                embeds: [embed.setDescription(`${data.map((d, i) => `\`${i + 1}.\` ${message.guild.members.cache.has(d.id) ? message.guild.members.cache.get(d.id) : '<@' + d.id + '>'} • ${d.total} Pin`).join('\n')}`)],
+                embeds: [embed.setDescription(`${data.map((d, i) => `\`${(page - 1) * 10 + i + 1}.\` ${message.guild.members.cache.has(d.id) ? message.guild.members.cache.get(d.id) : '<@' + d.id + '>'} • ${d.total} Pin`).join('\n')}`)],
                 components: [getButton(page, totalData)]
             })
         });
